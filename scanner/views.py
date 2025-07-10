@@ -1,8 +1,10 @@
+import celery.exceptions
+import redis.exceptions
+import socket
 from celery.result import AsyncResult
 
 from scanner.models import Scan, CheckInfo, Finding
 from scanner.serializers import ScanSerializer, CheckSerializer, FindingSerializer
-
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -85,10 +87,23 @@ class ScanViewSet(viewsets.ModelViewSet):
         """
         scan = self.get_object()
         task_id = scan.celery_task_id
-        result = AsyncResult(task_id)
 
-        if not result:
-            return Response({'error': 'the scan is not initiated yet'})
+        if not task_id:
+            return Response({'error': 'the scan is not initiated yet'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            result = AsyncResult(task_id)
+        except (celery.exceptions.CeleryError, redis.exceptions.RedisError, ConnectionError, socket.error) as e:
+            # Catch common connection issues to Redis or Celery backend
+            return Response(
+                {'error': 'Failed to connect to Celery backend: ' + str(e)},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+        except Exception as e:
+            return Response(
+                {'error': 'Unexpected error: ' + str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
         return Response({
             'task_id': task_id,

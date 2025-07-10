@@ -43,6 +43,9 @@ services:
     depends_on:
       - redis
       - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - CELERY_BROKER_URL=redis://redis:6379/0
 
   celery-beat:
     build:
@@ -55,6 +58,9 @@ services:
     depends_on:
       - redis
       - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - CELERY_BROKER_URL=redis://redis:6379/0
 
 volumes:
   postgres_data:

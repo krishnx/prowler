@@ -5,6 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'prowler_scanner.settings')
 
 app = Celery('prowler_scanner')
 app.config_from_object('django.conf:settings', namespace='CELERY')
+app.conf.broker_url = os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/0')
 app.autodiscover_tasks()
 
 # This ensures
