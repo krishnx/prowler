@@ -18,7 +18,7 @@ celery:
 	celery -A prowler_project worker --loglevel=info
 
 redis:
-	redis-server --port 6380
+	redis-server
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

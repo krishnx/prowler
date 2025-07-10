@@ -124,14 +124,12 @@ class ScanViewSet(viewsets.ModelViewSet):
             scan.ended_at = timezone.now()
             scan.save()
 
-
             redis_conn = RedisProvider()
-            redis_conn.delete(scan,id)
+            redis_conn.delete(scan.id)
 
             return Response({'status': 'cancelled', 'task_id': task_id})
         else:
             return Response({'error': 'No task running'}, status=400)
-
 
 
 class CheckInfoViewSet(viewsets.ModelViewSet):

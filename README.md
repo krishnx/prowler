@@ -46,7 +46,7 @@ python manage.py migrate
 
 # 4. Start Redis (ensure port matches REDIS_PORT env or RedisProvider)
 run on custom port:
-redis-server --port 6380
+redis-server --port 6379
 
 # 5. Start Django
 python manage.py runserver

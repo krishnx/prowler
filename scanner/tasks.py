@@ -1,9 +1,12 @@
 import time
+import logging
 
 from celery import shared_task
 from django.utils import timezone
 from .models import Scan
 from .redis_provider import RedisProvider
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task(bind=True)
@@ -16,7 +19,7 @@ def run_scan_task(self, scan_id):
     # acquire lock with 5 minutes TTL
     got_lock = redis_pro.conn.set(lock_key, 'locked', ex=300, nx=True)
     if not got_lock:
-        print(f'Scan {scan_id} is already running, skipping this duplicate task')
+        logger.info(f'Scan {scan_id} is already running, skipping this duplicate task')
         return None
 
     scan = Scan.objects.get(id=scan_id)
@@ -33,6 +36,8 @@ def run_scan_task(self, scan_id):
         scan.status = 'completed'
         scan.ended_at = timezone.now()
         scan.save()
+
+        logger.info(f'scan id {scan.id} completed')
 
     except Exception as e:
         scan.status = 'failed'
