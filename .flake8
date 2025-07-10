@@ -1,0 +1,29 @@
+# .flake8
+
+[flake8]
+# Maximum allowed line length
+max-line-length = 120
+
+# Ignore specific warnings
+extend-ignore = E203, W503
+
+# Exclude these directories from linting
+exclude =
+    __pycache__,
+    migrations,
+    .git,
+    .venv,
+    env,
+    build,
+    dist
+
+# Enable useful flake8 plugins if installed
+# (e.g., flake8-bugbear, flake8-docstrings)
+select = B,C,E,F,W,T4,B9
+
+# Show source code for each error
+show-source = true
+
+# Enable per-file-ignores for known violations
+per-file-ignores =
+    */__init__.py: F401
