@@ -24,7 +24,7 @@ SECRET_KEY = 'ye9$nb8b6smum6$4#95^a&r=&20c9r$i9=v6e#6o-ff0a=%*!@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -121,9 +121,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Redis broker URL
-CELERY_BROKER_URL = 'redis://localhost:6380/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = 'redis://localhost:6380/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_TASK_SERIALIZER = 'json'
 
 # ASGI application
